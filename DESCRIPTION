@@ -1,16 +1,29 @@
 Package: instaeda
-Title: What the Package Does (One Line, Title Case)
+Title: InstaEDA: Quick and easy way to clean data and build exploratory data analysis plots
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+    person(given = "Justin",
+           family = "Fu",
+           email = "justin@example.com",
+           role = c("aut", "cre"))
+    person(given = "Royce",
+           family = "Zhou",
+           email = "royce@example.com",
+           role = c("aut", "cre"))
+    person(given = "Selma",
+           family = "Duric",
+           email = "selma@duric.ca",
+           role = c("aut", "cre"))
+    person(given = "Zeliha",
+           family = "Ural Merpez",
+           email = "zmerpez@gmail.com",
+           role = c("aut", "cre"))
+Description: This idea came up as we have been building data projects for quite some time now in the UBC MDS program. We noticed that there are some repetitive activities that occur when we first explore the data. This project will help you take a given raw data set an conduct some data cleansing and plotting with a minimal amount of code.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
