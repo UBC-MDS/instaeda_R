@@ -41,13 +41,11 @@ The main components of this package are:
         other chart types depending on the column’s datatype.
 
 There are a myriad of packages that provide similar functionality in the
-Python ecosystem. A few of the more popular packages include:
+R ecosystem. A few of the packages include:
 
-  - [Pandas
-    Profiling](https://github.com/pandas-profiling/pandas-profiling)
-  - [DataPrep](https://docs.dataprep.ai/index.html)
-  - [Autoviz](https://pypi.org/project/autoviz/)
-  - [ExploriPy](https://pypi.org/project/ExploriPy/)
+  - [dlookr](https://cran.r-project.org/web/packages/dlookr/)
+  - [SmartEDA](https://cran.r-project.org/web/packages/SmartEDA/)
+  
 
 ## Installation
 
