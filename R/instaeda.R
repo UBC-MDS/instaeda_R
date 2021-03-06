@@ -25,13 +25,20 @@ plot_intro <-
     
   }
 
-#' Title
+
+#' Plot correlation between numeric features.
+#' Takes a dataframe, subsets numeric columns and returns a correlation plot object.
 #'
-#' @return
-#' @export
+#' @param df Dataframe from which to take columns and calculate, plot correlation between columns.
+#' @param cols List of columns to perform correlation on. By default, null (perform on all numeric).
+#' @param method correlation calculation method, one of: {'pearson', 'kendall', 'spearman'}. By default 'pearson'
+#' @param colour_palette one of ggplot accepted colour schemes
+#'
+#' @return ggplot plot object
 #'
 #' @examples
-plot_corr <- function(){
+#' plot_corr(example_dataframe)
+plot_corr <- function(df, cols=NULL, method="pearson", colour_palette="purpleorange"){
   NULL
 }
 
@@ -40,14 +47,14 @@ plot_corr <- function(){
 #' Title
 #'
 #' @param dataframe Dataframe from which to take columns and check for missing values.
-#' @param cols List of columns to perform imputation on. 
+#' @param cols List of columns to perform imputation on.
 #' By default, None (perform on all numeric columns).
-#' @param missing_values int, float, str, np.nan or None. 
+#' @param missing_values int, float, str, np.nan or None.
 #' The placeholder for the missing values. All occurences of missing values will be imputed.
-#' @param strategy string. imputation strategy, one of: {'mean', 'median', 'constant', 'most_frequent'}. 
+#' @param strategy string. imputation strategy, one of: {'mean', 'median', 'constant', 'most_frequent'}.
 #' By default, 'mean'.
-#' @param fill_value string or numerical value, optional. 
-#' When strategy == 'constant', fill_value is used to replace all occurences of missing_values. 
+#' @param fill_value string or numerical value, optional.
+#' When strategy == 'constant', fill_value is used to replace all occurences of missing_values.
 #' If left to default, fill_value will be 0 when filling numerical data and 'missing' for strings or object data types.
 #' @param random boolean, optional
 #' When random == True, shuffles data frame before filling. By default, False.
