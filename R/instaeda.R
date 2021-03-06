@@ -1,3 +1,11 @@
+#' @import ggplot2
+#' @import data.table
+#' @importFrom stats reorder
+#' @importFrom scales comma percent
+#' @importFrom stats complete.cases
+#' @importFrom utils object.size
+
+
 #' Plot summary metrics for input data.
 #'
 #' @param data input data
@@ -6,23 +14,15 @@
 #' @param theme_config a list of configurations to be passed to \link{theme}.
 #' @return invisibly return the ggplot object
 #' @keywords plot_intro
-#' @import ggplot2
-#' @import data.table
-#' @importFrom stats reorder
-#' @importFrom scales comma percent
-#' @importFrom stats complete.cases
-#' @importFrom utils object.size
 #' @export
 #' @examples
 #' plot_intro(example_dataframe)
-
 plot_intro <-
   function(data,
            geom_labels = list(),
            title = NULL,
            theme_config = list()) {
     NULL
-    
   }
 
 
@@ -38,13 +38,15 @@ plot_intro <-
 #'
 #' @examples
 #' plot_corr(example_dataframe)
-plot_corr <- function(df, cols=NULL, method="pearson", colour_palette="purpleorange"){
+plot_corr <- function(df,
+                      cols=NULL,
+                      method="pearson",
+                      colour_palette="purpleorange"){
   NULL
 }
 
 
-
-#' Title
+#' Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
 #'
 #' @param dataframe Dataframe from which to take columns and check for missing values.
 #' @param cols List of columns to perform imputation on.
@@ -80,12 +82,21 @@ divide_and_fill <- function(dataframe,
 }
 
 
-#' Title
+#' Plot basic distributions for numeric and string features from a given dataframe
 #'
-#' @return
+#' @param df Dataframe from which to generate plots for each column from
+#' @param cols List of columns to generate plots for. By default, NULL (perform on all numeric).
+#' @param include select the data type to include. Supported values include NULL, "string" and "number". When selecting NULL, both string and number datatypes will be returned. By default, NULL.
+#' @param colour_palette one of ggplot accepted colour schemes for the plots
+#'
+#' @return named list of ggplot objects with each name referencing a column name
 #' @export
 #'
 #' @examples
-plot_basic_distributions <- function(){
+#' plot_basic_distributions(example_dataframe)
+plot_basic_distributions <- function(df,
+                                     cols=NULL,
+                                     include=NULL,
+                                     colour_palette="purpleorange"){
   NULL
 }
