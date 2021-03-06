@@ -45,7 +45,6 @@ R ecosystem. A few of the packages include:
 
   - [dlookr](https://cran.r-project.org/web/packages/dlookr/)
   - [SmartEDA](https://cran.r-project.org/web/packages/SmartEDA/)
-  
 
 ## Installation
 
@@ -65,9 +64,14 @@ devtools::install_github("UBC-MDS/instaeda_R")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example of usage for functions found inside the instaeda
+package:
 
 ``` r
-library(instaeda)
-## basic example code
+#library(instaeda)
+
+#plot_intro(example_dataframe)
+#plot_corr(example_dataframe)
+#plot_basic_distributions(example_dataframe)
+#divide_and_fill(example_dataframe)
 ```
