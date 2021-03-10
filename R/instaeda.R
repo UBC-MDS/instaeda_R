@@ -39,11 +39,39 @@ plot_intro <-
 #' @examples
 #' plot_corr(example_dataframe)
 plot_corr <- function(df,
-                      cols=NULL,
-                      method="pearson",
-                      colour_palette="purpleorange"){
-  NULL
+                      cols = NULL,
+                      method = "pearson",
+                      colour_palette = "PuOr") {
+
+  # subset dataframe for numeric values only
+  num_df <- dplyr::select_if(df, is.numeric)
+  if (length(cols) > 0) {
+    num_df <- num_df %>% select(all_of(cols))
+  }
+
+  # calculate correlation
+  corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
+
+  corr_df <- corr_df %>%
+    mutate("variable_1" = (corr_df %>% rownames())) %>%
+    pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+
+  # plot
+  ggplot(corr_df, aes(
+    x = variable_1,
+    y = variable_2,
+    fill = corr
+  )) +
+    geom_tile() +
+    scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
+    labs(
+      title = "Correlations between variables",
+      x = "Variable 1",
+      y = "Variable 2"
+    )
 }
+c <- c("body_mass_g", "year", "bill_depth_mm")
+plot_corr(penguins_df, cols = c)
 
 
 #' Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
