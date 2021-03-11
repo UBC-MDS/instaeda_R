@@ -4,6 +4,8 @@
 #' @importFrom scales comma percent
 #' @importFrom stats complete.cases
 #' @importFrom utils object.size
+#' @import dplyr
+#' @import usethis::use_pipe()
 
 
 #' Plot summary metrics for input data.
@@ -44,12 +46,22 @@ plot_corr <- function(df,
                       colour_palette = "PuOr") {
 
   # subset dataframe for numeric values only
+  if (!is.data.frame(df)) {
+    stop("Data provided is not a data frame")
+  }
+  if (dplyr::select_if(df, is.numeric) %>% ncol() < 2) {
+    stop("Need at least two numeric columns to calculate correlation")
+  }
   num_df <- dplyr::select_if(df, is.numeric)
   if (length(cols) > 0) {
     num_df <- num_df %>% select(all_of(cols))
   }
 
   # calculate correlation
+  correlation_methods <- c("pearson", "kendall", "spearman")
+  if (!(method %in% correlation_methods)) {
+    stop("Correlation method not acceptable")
+  }
   corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
 
   corr_df <- corr_df %>%
@@ -57,6 +69,13 @@ plot_corr <- function(df,
     pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
 
   # plot
+  colour_palette_list <- c(
+    "BrBG", "PiYG", "PRGn", "PuOr", "RdBu",
+    "RdGy", "RdYlBu", "RdYlGn", "Spectral"
+  )
+  if (!(colour_palette %in% colour_palette_list)) {
+    warning("Recommended ggplot continuous diverging colour palette")
+  }
   ggplot(corr_df, aes(
     x = variable_1,
     y = variable_2,
@@ -99,13 +118,13 @@ plot_corr(penguins_df, cols = c)
 #' @examples
 #' divide_and_fill(example_dataframe)
 divide_and_fill <- function(dataframe,
-                            cols=None,
-                            missing_values=np.nan,
-                            strategy="mean",
-                            fill_value=None,
-                            random=False,
-                            parts=1,
-                            verbose=0){
+                            cols = None,
+                            missing_values = np.nan,
+                            strategy = "mean",
+                            fill_value = None,
+                            random = False,
+                            parts = 1,
+                            verbose = 0) {
   NULL
 }
 
@@ -123,8 +142,8 @@ divide_and_fill <- function(dataframe,
 #' @examples
 #' plot_basic_distributions(example_dataframe)
 plot_basic_distributions <- function(df,
-                                     cols=NULL,
-                                     include=NULL,
-                                     colour_palette="purpleorange"){
+                                     cols = NULL,
+                                     include = NULL,
+                                     colour_palette = "purpleorange") {
   NULL
 }
