@@ -74,21 +74,21 @@ plot_corr <- function(df,
   if (!(colour_palette %in% colour_palette_list)) {
     warning("Recommended ggplot continuous diverging colour palette")
   }
-  ggplot(corr_df, aes(
+  ggplot2::ggplot(corr_df, ggplot2::aes(
     x = variable_1,
     y = variable_2,
     fill = corr
   )) +
-    geom_tile() +
-    scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
-    labs(
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
+    ggplot2::labs(
       title = "Correlations between variables",
       x = "Variable 1",
       y = "Variable 2",
       fill = "Correlation"
     ) +
-    geom_text(aes(label = round(corr, 4)), size = 3) +
-    theme(axis.text.x = element_text(angle = 50, vjust = 0.55))
+    ggplot2::geom_text(ggplot2::aes(label = round(corr, 4)), size = 3) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 50, vjust = 0.55))
 }
 
 
