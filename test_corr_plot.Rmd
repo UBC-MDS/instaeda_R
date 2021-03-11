@@ -1,0 +1,98 @@
+---
+title: "corr_plot"
+output: html_document
+---
+
+```{r}
+
+penguins_df <- palmerpenguins::penguins
+head(penguins_df)
+
+```
+
+```{r}
+plot_corr <- function(df,
+                      cols = NULL,
+                      method = "pearson",
+                      colour_palette = "PuOr") {
+
+  # subset dataframe for numeric values only
+  num_df <- dplyr::select_if(df, is.numeric)
+  if (length(cols) > 0) {
+    num_df <- num_df %>% select(all_of(cols))
+  }
+
+  # calculate correlation
+  corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
+
+  corr_df <- corr_df %>%
+    mutate("variable_1" = (corr_df %>% rownames())) %>%
+    pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+
+  # plot
+  ggplot(corr_df, aes(
+    x = variable_1,
+    y = variable_2,
+    fill = corr
+  )) +
+    geom_tile() +
+    scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
+    labs(
+      title = "Correlations between variables",
+      x = "Variable 1",
+      y = "Variable 2"
+    )
+}
+c <- c("body_mass_g", "year", "bill_depth_mm")
+plot_corr(penguins_df, cols = c)
+```
+
+
+
+```{r}
+df <- dplyr::select_if(penguins_df, is.numeric) %>% select(all_of(c))
+
+
+corr_df <- as.data.frame(cor(df, use = "complete.obs"))
+
+corr_df <- corr_df %>%
+  mutate("variable_1" = (corr_df %>% rownames())) %>%
+  pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+corr_df
+
+# plot
+ggplot(corr_df, aes(x = variable_1,
+               y = variable_2,
+               fill = corr)) + 
+  geom_tile() +
+  scale_fill_distiller(palette = 'PuOr', limits=c(-1, 1)) + 
+  labs(title = 'Correlations between variables',
+         x = 'Variable 1',
+         y = 'Variable 2')
+```
+
+```{r tests}
+
+test_that("resulting mark is geom_tile", {
+ NULL
+})
+
+test_that("correlation values should be plotted on colour", {
+ NULL
+})
+
+test_that("correlation values between -1, 1", {
+ NULL
+})
+
+test_that("map 'variable_1' to x-axis, 'variable_2' to y-axis", {
+ NULL
+})
+
+test_that("output expected ggplot Chart object", {
+ NULL
+})
+
+
+
+

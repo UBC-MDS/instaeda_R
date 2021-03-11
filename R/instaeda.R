@@ -86,7 +86,8 @@ plot_corr <- function(df,
     labs(
       title = "Correlations between variables",
       x = "Variable 1",
-      y = "Variable 2"
+      y = "Variable 2",
+      fill = "Correlation"
     )
 }
 c <- c("body_mass_g", "year", "bill_depth_mm")
