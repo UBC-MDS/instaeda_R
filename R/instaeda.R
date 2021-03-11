@@ -5,11 +5,11 @@
 #' @importFrom stats complete.cases
 #' @importFrom utils object.size
 #' @import dplyr
-
+#' @import stringr
+#'
 #' Plot summary metrics for input data.
 #'
 #' @param data input data
-#' @param geom_labels a list of arguments to \link{geom_label}
 #' @param title plot title
 #' @param theme_config a list of configurations to be passed to \link{theme}.
 #' @return invisibly return the ggplot object
@@ -19,10 +19,116 @@
 #' plot_intro(example_dataframe)
 plot_intro <-
   function(data,
-           geom_labels = list(),
-           title = NULL,
+           title = "",
            theme_config = list()) {
-    NULL
+
+    # Check input as a dataframe
+    if (!is.data.frame(data)) {
+      stop("Input provided is not a dataframe")
+    }
+
+    # Check title arg
+    if (!is.character(title)) {
+      stop("Plotting title provided is not a string")
+    }
+
+    ## Get intro data
+    is_data_table <- is.data.table(data)
+    data_class <- class(data)
+    if (!is.data.table(data))
+      data <- data.table(data)
+
+    getAllMissing <- function(dt) {
+      if (!is.data.table(dt))
+        dt <- data.table(dt)
+      vapply(dt, function(x)
+        sum(is.na(x)) == length(x), TRUE)
+    }
+
+    ## Find indicies for each feature type
+    all_missing_ind <- which(getAllMissing(data))
+    numeric_ind <-
+      setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_ind)
+
+    ## Count number of discrete, continuous and all-missing features
+    n_all_missing <- length(all_missing_ind)
+    n_numeric <- length(numeric_ind)
+
+    ## Create object for numeric features
+    numeric <- data[, numeric_ind, with = FALSE]
+    setnames(numeric, make.names(names(numeric)))
+
+    ## Set data class back to original
+    if (!is_data_table)
+      class(numeric) <- data_class
+
+    split_data <- list(
+      "numeric" = numeric,
+      "num_numeric" = n_numeric,
+      "num_all_missing" = n_all_missing
+    )
+
+    plot_data <- data.table(
+      "rows" = nrow(data),
+      "columns" = ncol(data),
+      "numeric_columns" = split_data[["num_numeric"]],
+      "all_missing_columns" = split_data[["num_all_missing"]],
+      "total_missing_values" = sum(is.na(data)),
+      "complete_rows" = sum(complete.cases(data)),
+      "total_observations" = nrow(data) * ncol(data),
+      "memory_usage" = as.numeric(object.size(data))
+    )
+
+    if (!is_data_table)
+      class(plot_data) <- data_class
+
+    id <- dimension <- variable <- value <- NULL
+
+    ## Get plotting data
+    memory_usage <- plot_data[["memory_usage"]]
+    class(memory_usage) <- "object_size"
+    memory_usage_string <- format(memory_usage, unit = "auto")
+    plot_data2 <- data.table(
+      "id" = seq.int(4L),
+      "dimension" = c(rep("column", 2L), "row", "observation"),
+      "variable" = c(
+        "Numeric Columns",
+        "All Missing Columns",
+        "Complete Rows",
+        "Missing Observations"
+      ),
+      "value" = c(
+        plot_data[["numeric_columns"]] / plot_data[["columns"]],
+        plot_data[["all_missing_columns"]] / plot_data[["columns"]],
+        plot_data[["complete_rows"]] / plot_data[["rows"]],
+        plot_data[["total_missing_values"]] / plot_data[["total_observations"]]
+      )
+    )
+
+    ## Plot the intro data info
+    output <-
+      ggplot(plot_data2, aes(
+        x = reorder(variable, -id),
+        y = value,
+        fill = dimension
+      )) +
+      geom_bar(stat = "identity") +
+      scale_y_continuous(labels = percent) +
+      scale_fill_discrete("Dimension") +
+      coord_flip() +
+      labs(x = "Metrics", y = "Value") +
+      guides(fill = guide_legend(override.aes = aes(label = ""))) +
+      ggtitle(ifelse(
+        str_length(title) == 0,
+        paste("Memory Usage:", memory_usage_string),
+        title
+      )) +
+      theme_gray() + scale_color_manual(values = theme_config)
+
+    ## Plot object
+    class(output) <- c("single", class(output))
+
+    output
   }
 
 
