@@ -2,13 +2,50 @@
 % Please edit documentation in R/instaeda.R
 \name{divide_and_fill}
 \alias{divide_and_fill}
-\title{Title}
+\title{Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.}
 \usage{
-divide_and_fill()
+divide_and_fill(
+  dataframe,
+  cols = None,
+  missing_values = np.nan,
+  strategy = "mean",
+  fill_value = None,
+  random = False,
+  parts = 1,
+  verbose = 0
+)
+}
+\arguments{
+\item{dataframe}{Dataframe from which to take columns and check for missing values.}
+
+\item{cols}{List of columns to perform imputation on.
+By default, None (perform on all numeric columns).}
+
+\item{missing_values}{int, float, str, np.nan or None.
+The placeholder for the missing values. All occurences of missing values will be imputed.}
+
+\item{strategy}{string. imputation strategy, one of: {'mean', 'median', 'constant', 'most_frequent'}.
+By default, 'mean'.}
+
+\item{fill_value}{string or numerical value, optional.
+When strategy == 'constant', fill_value is used to replace all occurences of missing_values.
+If left to default, fill_value will be 0 when filling numerical data and 'missing' for strings or object data types.}
+
+\item{random}{boolean, optional
+When random == True, shuffles data frame before filling. By default, False.}
+
+\item{parts}{integer, optional
+The number of parts to divide rows of data frame into. By default, 1.}
+
+\item{verbose}{integer, optional
+Controls the verbosity of the divide and fill. By default, 0.}
 }
 \value{
-
+data.frame Data frame obtained after divide and fill on the corresponding columns.
 }
 \description{
-Title
+Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
+}
+\examples{
+divide_and_fill(example_dataframe)
 }

@@ -5,8 +5,6 @@
 #' @importFrom stats complete.cases
 #' @importFrom utils object.size
 #' @import dplyr
-#' @import usethis::use_pipe()
-
 
 #' Plot summary metrics for input data.
 #'
@@ -65,8 +63,8 @@ plot_corr <- function(df,
   corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
 
   corr_df <- corr_df %>%
-    mutate("variable_1" = (corr_df %>% rownames())) %>%
-    pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+    dplyr::mutate("variable_1" = (corr_df %>% rownames())) %>%
+    tidyr::pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
 
   # plot
   colour_palette_list <- c(
@@ -76,21 +74,22 @@ plot_corr <- function(df,
   if (!(colour_palette %in% colour_palette_list)) {
     warning("Recommended ggplot continuous diverging colour palette")
   }
-  ggplot(corr_df, aes(
+  ggplot2::ggplot(corr_df, ggplot2::aes(
     x = variable_1,
     y = variable_2,
     fill = corr
   )) +
-    geom_tile() +
-    scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
-    labs(
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_distiller(palette = colour_palette, limits = c(-1, 1)) +
+    ggplot2::labs(
       title = "Correlations between variables",
       x = "Variable 1",
-      y = "Variable 2"
-    )
+      y = "Variable 2",
+      fill = "Correlation"
+    ) +
+    ggplot2::geom_text(ggplot2::aes(label = round(corr, 4)), size = 3) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 50, vjust = 0.55))
 }
-c <- c("body_mass_g", "year", "bill_depth_mm")
-plot_corr(penguins_df, cols = c)
 
 
 #' Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.

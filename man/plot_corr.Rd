@@ -2,13 +2,27 @@
 % Please edit documentation in R/instaeda.R
 \name{plot_corr}
 \alias{plot_corr}
-\title{Title}
+\title{Plot correlation between numeric features.
+Takes a dataframe, subsets numeric columns and returns a correlation plot object.}
 \usage{
-plot_corr()
+plot_corr(df, cols = NULL, method = "pearson", colour_palette = "PuOr")
+}
+\arguments{
+\item{df}{Dataframe from which to take columns and calculate, plot correlation between columns.}
+
+\item{cols}{List of columns to perform correlation on. By default, null (perform on all numeric).}
+
+\item{method}{correlation calculation method, one of: {'pearson', 'kendall', 'spearman'}. By default 'pearson'}
+
+\item{colour_palette}{one of ggplot accepted colour schemes}
 }
 \value{
-
+ggplot plot object
 }
 \description{
-Title
+Plot correlation between numeric features.
+Takes a dataframe, subsets numeric columns and returns a correlation plot object.
+}
+\examples{
+plot_corr(example_dataframe)
 }
