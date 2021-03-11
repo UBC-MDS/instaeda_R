@@ -5,7 +5,8 @@
 #' @importFrom stats complete.cases
 #' @importFrom utils object.size
 #' @import dplyr
-
+#' @import stringr
+#'
 #' Plot summary metrics for input data.
 #'
 #' @param data input data
@@ -18,8 +19,19 @@
 #' plot_intro(example_dataframe)
 plot_intro <-
   function(data,
-           title = NULL,
+           title = "",
            theme_config = list()) {
+
+    # Check input as a dataframe
+    if (!is.data.frame(data)) {
+      stop("Input provided is not a dataframe")
+    }
+
+    # Check title arg
+    if (!is.character(title)) {
+      stop("Plotting title provided is not a string")
+    }
+
     ## Get intro data
     is_data_table <- is.data.table(data)
     data_class <- class(data)
@@ -107,7 +119,7 @@ plot_intro <-
       labs(x = "Metrics", y = "Value") +
       guides(fill = guide_legend(override.aes = aes(label = ""))) +
       ggtitle(ifelse(
-        is.null(title),
+        str_length(title) == 0,
         paste("Memory Usage:", memory_usage_string),
         title
       )) +
@@ -115,6 +127,8 @@ plot_intro <-
 
     ## Plot object
     class(output) <- c("single", class(output))
+
+    output
   }
 
 
