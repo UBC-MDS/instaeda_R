@@ -5,8 +5,6 @@
 #' @importFrom stats complete.cases
 #' @importFrom utils object.size
 #' @import dplyr
-#' @import usethis::use_pipe()
-
 
 #' Plot summary metrics for input data.
 #'
@@ -65,8 +63,8 @@ plot_corr <- function(df,
   corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
 
   corr_df <- corr_df %>%
-    mutate("variable_1" = (corr_df %>% rownames())) %>%
-    pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+    dplyr::mutate("variable_1" = (corr_df %>% rownames())) %>%
+    tidyr::pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
 
   # plot
   colour_palette_list <- c(
