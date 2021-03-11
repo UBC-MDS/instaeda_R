@@ -88,10 +88,10 @@ plot_corr <- function(df,
       x = "Variable 1",
       y = "Variable 2",
       fill = "Correlation"
-    )
+    ) +
+    geom_text(aes(label = round(corr, 4)), size = 3) +
+    theme(axis.text.x = element_text(angle = 50, vjust = 0.55))
 }
-c <- c("body_mass_g", "year", "bill_depth_mm")
-plot_corr(penguins_df, cols = c)
 
 
 #' Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
