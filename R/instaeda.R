@@ -9,12 +9,12 @@
 #' @importFrom utils object.size
 #' @import dplyr
 #' @import stringr
-#' @import ggthemes
+
 #'
 #' @param data input data
 #' @param title plot title
-#' @param theme_config a list of configurations to be passed to \link{theme}.
-#' @return invisibly return the ggplot object
+#' @param theme_config a list of configurations to manually change colors
+#' @return return the ggplot object
 #' @keywords plot_intro
 #' @export
 #' @examples
@@ -31,48 +31,47 @@ plot_intro <-
       stop("Input provided is not a dataframe")
     }
 
-    # Check title arg
+    # Check title arg as a string
     if (!is.character(title)) {
       stop("Plotting title provided is not a string")
     }
 
-    ## Get intro data
+    ## Get input data summary
     is_data_table <- is.data.table(data)
     data_class <- class(data)
     if (!is.data.table(data))
       data <- data.table(data)
 
-    getAllMissing <- function(dt) {
-      if (!is.data.table(dt))
-        dt <- data.table(dt)
-      vapply(dt, function(x)
+    getMissingInx <- function(df) {
+      if (!is.data.table(df))
+        df <- data.table(df)
+      vapply(df, function(x)
         sum(is.na(x)) == length(x), TRUE)
     }
 
-    ## Find indicies for each feature type
-    all_missing_ind <- which(getAllMissing(data))
-    numeric_ind <-
-      setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_ind)
+    ## Find index for each type
+    all_missing_index <- which(getMissingInx(data))
+    numeric_index <-
+      setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_index)
 
-    ## Count number of discrete, continuous and all-missing features
-    n_all_missing <- length(all_missing_ind)
-    n_numeric <- length(numeric_ind)
+    ## Count number of numeric and all-missing columns
+    n_all_missing <- length(all_missing_index)
+    n_numeric <- length(numeric_index)
 
-    ## Create object for numeric features
-    numeric <- data[, numeric_ind, with = FALSE]
-    setnames(numeric, make.names(names(numeric)))
-
-    ## Set data class back to original
+    ## Create object for numeric columns
+    numeric_obj <- data[, numeric_index, with = FALSE]
+    setnames(numeric_obj, make.names(names(numeric_obj)))
     if (!is_data_table)
-      class(numeric) <- data_class
+      class(numeric_obj) <- data_class
 
+    ## Split data by types
     split_data <- list(
-      "numeric" = numeric,
+      "numeric" = numeric_obj,
       "num_numeric" = n_numeric,
       "num_all_missing" = n_all_missing
     )
 
-    plot_data <- data.table(
+    data_summary <- data.table(
       "rows" = nrow(data),
       "columns" = ncol(data),
       "numeric_columns" = split_data[["num_numeric"]],
@@ -82,17 +81,16 @@ plot_intro <-
       "total_observations" = nrow(data) * ncol(data),
       "memory_usage" = as.numeric(object.size(data))
     )
-
     if (!is_data_table)
-      class(plot_data) <- data_class
+      class(data_summary) <- data_class
 
     id <- dimension <- variable <- value <- NULL
 
     ## Get plotting data
-    memory_usage <- plot_data[["memory_usage"]]
+    memory_usage <- data_summary[["memory_usage"]]
     class(memory_usage) <- "object_size"
     memory_usage_string <- format(memory_usage, unit = "auto")
-    plot_data2 <- data.table(
+    plot_data <- data.table(
       "id" = seq.int(4L),
       "dimension" = c(rep("column", 2L), "row", "observation"),
       "variable" = c(
@@ -102,16 +100,16 @@ plot_intro <-
         "Missing Observations"
       ),
       "value" = c(
-        plot_data[["numeric_columns"]] / plot_data[["columns"]],
-        plot_data[["all_missing_columns"]] / plot_data[["columns"]],
-        plot_data[["complete_rows"]] / plot_data[["rows"]],
-        plot_data[["total_missing_values"]] / plot_data[["total_observations"]]
+        data_summary[["numeric_columns"]] / data_summary[["columns"]],
+        data_summary[["all_missing_columns"]] / data_summary[["columns"]],
+        data_summary[["complete_rows"]] / data_summary[["rows"]],
+        data_summary[["total_missing_values"]] / data_summary[["total_observations"]]
       )
     )
 
     ## Plot the intro data info
     output <-
-      ggplot(plot_data2, aes(
+      ggplot(plot_data, aes(
         x = reorder(variable, -id),
         y = value,
         fill = dimension
