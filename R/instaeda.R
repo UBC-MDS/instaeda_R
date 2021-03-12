@@ -9,7 +9,7 @@
 #' @importFrom utils object.size
 #' @import dplyr
 #' @import stringr
-
+#' @import ggthemes
 #'
 #' @param data input data
 #' @param title plot title
@@ -244,10 +244,10 @@ divide_and_fill <- function(dataframe,
 
 #' Plot basic distributions for numeric and string features from a given dataframe
 #'
-#' @param df Dataframe from which to generate plots for each column from
+#' @param df dataframe from which to generate plots for each column from
 #' @param cols List of columns to generate plots for. By default, NULL (perform on all numeric).
 #' @param include select the data type to include. Supported values include NULL, "string" and "number". When selecting NULL, both string and number datatypes will be returned. By default, NULL.
-#' @param colour_palette one of ggplot accepted colour schemes for the plots
+#' @param ggtheme customize the ggtheme used in plots. Only the following ggthemes are supported: theme_gdocs, theme_excel, theme_economist, theme_wsj, theme_solarized
 #'
 #' @return named list of ggplot objects with each name referencing a column name
 #' @export
@@ -259,7 +259,7 @@ divide_and_fill <- function(dataframe,
 plot_basic_distributions <- function(df,
                                      cols = NULL,
                                      include = NULL,
-                                     colour_palette = "PuOr") {
+                                     ggtheme = "theme_economist") {
 
   named_ls_plots <- list()
 
@@ -275,19 +275,36 @@ plot_basic_distributions <- function(df,
   }
 
   # plot
-  colour_palette_list <- c("BrBG",
-                           "PiYG",
-                           "PRGn",
-                           "PuOr",
-                           "RdBu",
-                           "RdGy",
-                           "RdYlBu",
-                           "RdYlGn",
-                           "Spectral")
-  if (length(colour_palette) > 0  &&
-      !(colour_palette %in% colour_palette_list)) {
-    warning("Recommended ggplot continuous diverging colour palette")
+  ggtheme_list <- c("theme_gdocs",
+                           "theme_excel",
+                           "theme_economist",
+                           "theme_wsj",
+                           "theme_solarized"
+                           )
+  if (length(ggtheme) > 0  &&
+      !(ggtheme %in% ggtheme_list)) {
+    warning("Only the following ggthemes are supported: theme_gdocs, theme_excel,
+            theme_economist, theme_wsj, theme_solarized")
   }
+
+
+  ggtheme_chosen <- NULL
+  if (is.null(ggtheme)){
+    ggtheme_chosen <- NULL
+  } else if (ggtheme == 'theme_gdocs'){
+    ggtheme_chosen <- theme_gdocs()
+  } else if (ggtheme == 'theme_excel'){
+    ggtheme_chosen <- theme_excel()
+  } else if (ggtheme == 'theme_economist'){
+    ggtheme_chosen <- theme_economist()
+  } else if (ggtheme == 'theme_wsj'){
+    ggtheme_chosen <- theme_wsj()
+  } else if (ggtheme == 'theme_solarized'){
+    ggtheme_chosen <- theme_solarized()
+  } else {
+    ggtheme_chosen <- NULL
+  }
+
 
   # First filter by only the columns filtered upoo
   # If NULL, no column filters
@@ -305,8 +322,7 @@ plot_basic_distributions <- function(df,
     for (i in colnames(df2)) {
       # Basic histogram
       named_ls_plots[[i]] <-
-        ggplot2::ggplot(df2, ggplot2::aes_string(x = i)) + ggplot2::geom_histogram() +
-        ggplot2::scale_fill_brewer(palette = colour_palette)
+        ggplot(df2, aes_string(x = i)) + geom_histogram() + ggtheme_chosen
 
     }
   }
@@ -320,8 +336,8 @@ plot_basic_distributions <- function(df,
     for (i in colnames(df3)) {
       # Bar Chart
       named_ls_plots[[i]] <-
-        df3 %>% add_count("{i}") %>% ggplot2::ggplot(ggplot2::aes_string(x = i)) +
-        ggplot2::geom_bar() + ggplot2::scale_fill_brewer(palette = colour_palette)
+        df3 %>% add_count("{i}") %>% ggplot(aes_string(x = i)) +
+            geom_bar()  + ggtheme_chosen
 
     }
   }

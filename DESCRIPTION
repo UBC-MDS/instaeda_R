@@ -35,4 +35,5 @@ Imports:
     palmerpenguins,
     data.table,
     scales,
-    stringr
+    stringr,
+    ggthemes
