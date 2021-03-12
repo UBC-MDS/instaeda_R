@@ -8,17 +8,17 @@ plot_basic_distributions(
   df,
   cols = NULL,
   include = NULL,
-  colour_palette = "PuOr"
+  ggtheme = "theme_economist"
 )
 }
 \arguments{
-\item{df}{Dataframe from which to generate plots for each column from}
+\item{df}{dataframe from which to generate plots for each column from}
 
 \item{cols}{List of columns to generate plots for. By default, NULL (perform on all numeric).}
 
 \item{include}{select the data type to include. Supported values include NULL, "string" and "number". When selecting NULL, both string and number datatypes will be returned. By default, NULL.}
 
-\item{colour_palette}{one of ggplot accepted colour schemes for the plots}
+\item{ggtheme}{customize the ggtheme used in plots. Only the following ggthemes are supported: theme_gdocs, theme_excel, theme_economist, theme_wsj, theme_solarized}
 }
 \value{
 named list of ggplot objects with each name referencing a column name
