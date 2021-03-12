@@ -1,3 +1,6 @@
+
+#' Plot summary metrics for input data.
+#'
 #' @import ggplot2
 #' @import data.table
 #' @importFrom stats reorder
@@ -6,8 +9,7 @@
 #' @importFrom utils object.size
 #' @import dplyr
 #' @import stringr
-#'
-#' Plot summary metrics for input data.
+
 #'
 #' @param data input data
 #' @param title plot title
@@ -16,7 +18,9 @@
 #' @keywords plot_intro
 #' @export
 #' @examples
+#' \dontrun{
 #' plot_intro(example_dataframe)
+#' }
 plot_intro <-
   function(data,
            title = "",
@@ -143,7 +147,9 @@ plot_intro <-
 #' @return ggplot plot object
 #'
 #' @examples
+#' \dontrun{
 #' plot_corr(example_dataframe)
+#' }
 plot_corr <- function(df,
                       cols = NULL,
                       method = "pearson",
@@ -221,7 +227,9 @@ plot_corr <- function(df,
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' divide_and_fill(example_dataframe)
+#' }
 divide_and_fill <- function(dataframe,
                             cols = None,
                             missing_values = np.nan,
@@ -245,7 +253,9 @@ divide_and_fill <- function(dataframe,
 #' @export
 #'
 #' @examples
-#' plot_basic_distributions(example_dataframe)
+#'  \dontrun{
+#'  plot_basic_distributions(example_dataframe)
+#'  }
 plot_basic_distributions <- function(df,
                                      cols = NULL,
                                      include = NULL,
@@ -254,7 +264,7 @@ plot_basic_distributions <- function(df,
   named_ls_plots <- list()
 
   # subset dataframe for numeric values only
-  if (!is.data.frame(input_df)) {
+  if (!is.data.frame(df)) {
     stop("Data provided is not a data frame")
   }
 
@@ -282,9 +292,9 @@ plot_basic_distributions <- function(df,
   # First filter by only the columns filtered upoo
   # If NULL, no column filters
   if (length(cols) > 0) {
-    df1 <- input_df %>% select(all_of(cols))
+    df1 <- df %>% select(all_of(cols))
   } else {
-    df1 <- input_df
+    df1 <- df
   }
 
   if (is.null(include) |

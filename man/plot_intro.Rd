@@ -2,13 +2,26 @@
 % Please edit documentation in R/instaeda.R
 \name{plot_intro}
 \alias{plot_intro}
-\title{Title}
+\title{Plot summary metrics for input data.}
 \usage{
-plot_intro()
+plot_intro(data, title = "", theme_config = list())
+}
+\arguments{
+\item{data}{input data}
+
+\item{title}{plot title}
+
+\item{theme_config}{a list of configurations to be passed to \link{theme}.}
 }
 \value{
-
+invisibly return the ggplot object
 }
 \description{
-Title
+Plot summary metrics for input data.
 }
+\examples{
+\dontrun{
+plot_intro(example_dataframe)
+}
+}
+\keyword{plot_intro}

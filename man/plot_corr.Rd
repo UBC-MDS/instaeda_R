@@ -24,5 +24,7 @@ Plot correlation between numeric features.
 Takes a dataframe, subsets numeric columns and returns a correlation plot object.
 }
 \examples{
+\dontrun{
 plot_corr(example_dataframe)
+}
 }

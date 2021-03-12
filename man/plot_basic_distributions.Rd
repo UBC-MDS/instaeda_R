@@ -8,7 +8,7 @@ plot_basic_distributions(
   df,
   cols = NULL,
   include = NULL,
-  colour_palette = "purpleorange"
+  colour_palette = "PuOr"
 )
 }
 \arguments{
@@ -27,5 +27,7 @@ named list of ggplot objects with each name referencing a column name
 Plot basic distributions for numeric and string features from a given dataframe
 }
 \examples{
-plot_basic_distributions(example_dataframe)
+ \dontrun{
+ plot_basic_distributions(example_dataframe)
+ }
 }
