@@ -249,6 +249,71 @@ divide_and_fill <- function(dataframe,
 plot_basic_distributions <- function(df,
                                      cols = NULL,
                                      include = NULL,
-                                     colour_palette = "purpleorange") {
-  NULL
+                                     colour_palette = "PuOr") {
+
+  named_ls_plots <- list()
+
+  # subset dataframe for numeric values only
+  if (!is.data.frame(input_df)) {
+    stop("Data provided is not a data frame")
+  }
+
+  # include string, number or all
+  include_options <- c(NULL, "number", "string")
+  if (length(include) > 0  && !(include %in% include_options)) {
+    stop("include parameter invalid. Please choose NULL, 'number' or 'string'")
+  }
+
+  # plot
+  colour_palette_list <- c("BrBG",
+                           "PiYG",
+                           "PRGn",
+                           "PuOr",
+                           "RdBu",
+                           "RdGy",
+                           "RdYlBu",
+                           "RdYlGn",
+                           "Spectral")
+  if (length(colour_palette) > 0  &&
+      !(colour_palette %in% colour_palette_list)) {
+    warning("Recommended ggplot continuous diverging colour palette")
+  }
+
+  # First filter by only the columns filtered upoo
+  # If NULL, no column filters
+  if (length(cols) > 0) {
+    df1 <- input_df %>% select(all_of(cols))
+  } else {
+    df1 <- input_df
+  }
+
+  if (is.null(include) |
+      (length(include) > 0 && include == 'number')) {
+    #Print only character
+    df2 <- select_if(df1, is.numeric)
+
+    for (i in colnames(df2)) {
+      # Basic histogram
+      named_ls_plots[[i]] <-
+        ggplot2::ggplot(df2, ggplot2::aes_string(x = i)) + ggplot2::geom_histogram() +
+        ggplot2::scale_fill_brewer(palette = colour_palette)
+
+    }
+  }
+
+  if (is.null(include) |
+      (length(include) > 0 && include == 'string')) {
+    df3 <-
+      df1[, sapply(df1, class) == 'character' |
+            sapply(df1, class) == 'factor']
+
+    for (i in colnames(df3)) {
+      # Bar Chart
+      named_ls_plots[[i]] <-
+        df3 %>% add_count("{i}") %>% ggplot2::ggplot(ggplot2::aes_string(x = i)) +
+        ggplot2::geom_bar() + ggplot2::scale_fill_brewer(palette = colour_palette)
+
+    }
+  }
+  named_ls_plots
 }
