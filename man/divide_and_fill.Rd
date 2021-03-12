@@ -47,5 +47,7 @@ data.frame Data frame obtained after divide and fill on the corresponding column
 Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
 }
 \examples{
+\dontrun{
 divide_and_fill(example_dataframe)
+}
 }

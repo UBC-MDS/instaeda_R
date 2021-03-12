@@ -1,3 +1,5 @@
+library(palmerpenguins)
+
 input_df <- palmerpenguins::penguins
 
 test_that("resulting mark is geom_tile", {
