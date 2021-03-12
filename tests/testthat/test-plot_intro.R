@@ -1,19 +1,34 @@
+library(testthat)
+library(instaeda)
+library(palmerpenguins)
+
 input_df <- palmerpenguins::penguins
 
+test_that("test input as a dataframe", {
+  expect_error(plot_intro(c("a", "b")), "Input provided is not a dataframe")
+})
+
+test_that("test input as a dataframe", {
+  expect_error(plot_intro(1), "Input provided is not a dataframe")
+})
+
+test_that("test plotting title as a string", {
+  expect_error(plot_intro(input_df, title=1), "Plotting title provided is not a string")
+})
+
 test_that("get all missing columns", {
-  dt <- data.table(
-    "a" = seq.int(10L),
+  test_df <- data.table(
+    "a" = rnorm(10L),
     "b" = rep(NA_character_, 10L),
     "c" = rep(NA_integer_, 10L),
-    "d" = rnorm(10L)
   )
-  if (!is.data.table(dt))
-    dt <- data.table(dt)
+  if (!is.data.table(test_df))
+    test_df <- data.table(test_df)
 
   expect_equal(
-    vapply(dt, function(x)
+    vapply(test_df, function(x)
       sum(is.na(x)) == length(x), TRUE),
-    c("a" = FALSE, "b" = TRUE, "c" = TRUE, "d" = FALSE))
+    c("a" = FALSE, "b" = TRUE, "c" = TRUE))
 })
 
 test_that("test intro output", {
@@ -32,32 +47,31 @@ test_that("test intro output", {
   if (!is.data.table(df))
     data <- data.table(df)
 
-  getAllMissing <- function(dt) {
-    if (!is.data.table(dt))
-      dt <- data.table(dt)
-    vapply(dt, function(x)
+  getMissingInx <- function(df) {
+    if (!is.data.table(df))
+      df <- data.table(df)
+    vapply(df, function(x)
       sum(is.na(x)) == length(x), TRUE)
   }
 
-  ## Find indicies for each feature type
-  all_missing_ind <- which(getAllMissing(data))
-  numeric_ind <-
-    setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_ind)
+  ## Find index for each type
+  all_missing_index <- which(getMissingInx(data))
+  numeric_index <-
+    setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_index)
 
-  ## Count number of discrete, continuous and all-missing features
-  n_all_missing <- length(all_missing_ind)
-  n_numeric <- length(numeric_ind)
+  ## Count number of numeric and all-missing columns
+  n_all_missing <- length(all_missing_index)
+  n_numeric <- length(numeric_index)
 
-  ## Create object for numeric features
-  numeric <- data[, numeric_ind, with = FALSE]
-  setnames(numeric, make.names(names(numeric)))
-
-  ## Set data class back to original
+  ## Create object for numeric columns
+  numeric_obj <- data[, numeric_index, with = FALSE]
+  setnames(numeric_obj, make.names(names(numeric_obj)))
   if (!is_data_table)
-    class(numeric) <- data_class
+    class(numeric_obj) <- data_class
 
+  ## Split data by types
   split_data <- list(
-    "numeric" = numeric,
+    "numeric" = numeric_obj,
     "num_numeric" = n_numeric,
     "num_all_missing" = n_all_missing
   )
@@ -80,18 +94,6 @@ test_that("test intro output", {
   expect_equal(output[["total_missing_values"]], 54L)
   expect_equal(output[["total_observations"]], 156L)
   expect_is(output[["memory_usage"]], "numeric")
-})
-
-test_that("test input as a dataframe", {
-  expect_error(plot_intro(c("a", "b")), "Input provided is not a dataframe")
-})
-
-test_that("test input as a dataframe", {
-  expect_error(plot_intro(1), "Input provided is not a dataframe")
-})
-
-test_that("test plotting title as a string", {
-  expect_error(plot_intro(input_df, title=1), "Plotting title provided is not a string")
 })
 
 test_that("test return object", {
