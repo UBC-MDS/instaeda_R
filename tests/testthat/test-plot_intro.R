@@ -30,7 +30,7 @@ test_that("test intro output", {
   num_numeric <- length(numeric_index)
 
   ## Create object for numeric columns
-  numeric_obj <- data[, numeric_index, with = FALSE]
+  numeric_obj <- input_df[, numeric_index, with = FALSE]
   setnames(numeric_obj, make.names(names(numeric_obj)))
 
   ## Split data by types
