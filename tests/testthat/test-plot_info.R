@@ -5,15 +5,15 @@ library(palmerpenguins)
 input_df <- palmerpenguins::penguins
 
 test_that("test input as a dataframe", {
-  expect_error(plot_intro(c("a", "b")), "Input provided is not a dataframe")
+  expect_error(plot_info(c("a", "b")), "Input provided is not a dataframe")
 })
 
 test_that("test input as a dataframe", {
-  expect_error(plot_intro(1), "Input provided is not a dataframe")
+  expect_error(plot_info(1), "Input provided is not a dataframe")
 })
 
 test_that("test plotting title as a string", {
-  expect_error(plot_intro(input_df, title=1), "Plotting title provided is not a string")
+  expect_error(plot_info(input_df, title=1), "Plotting title provided is not a string")
 })
 
 test_that("test intro output", {
@@ -69,7 +69,7 @@ test_that("test intro output", {
 })
 
 test_that("test return object", {
-  plot_obj <- plot_intro(input_df)
+  plot_obj <- plot_info(input_df)
   expect_true(is.ggplot(plot_obj))
 })
 

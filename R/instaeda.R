@@ -13,9 +13,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' plot_intro(example_dataframe)
+#' plot_info(example_dataframe)
 #' }
-plot_intro <-
+plot_info <-
   function(data,
            title = "",
            color_config = list()) {
