@@ -16,84 +16,48 @@ test_that("test plotting title as a string", {
   expect_error(plot_intro(input_df, title=1), "Plotting title provided is not a string")
 })
 
-test_that("get all missing columns", {
-  test_df <- data.table(
-    "a" = rnorm(10L),
-    "b" = rep(NA_character_, 10L),
-    "c" = rep(NA_integer_, 10L),
-  )
-  if (!is.data.table(test_df))
-    test_df <- data.table(test_df)
-
-  expect_equal(
-    vapply(test_df, function(x)
-      sum(is.na(x)) == length(x), TRUE),
-    c("a" = FALSE, "b" = TRUE, "c" = TRUE))
-})
-
 test_that("test intro output", {
-  df <- data.frame(
-    "A" = letters,
-    "B" = rep(NA_character_, 26L),
-    "C" = rnorm(26L),
-    "D" = rep(NA_integer_, 26L),
-    "E" = c(NA, letters[1L:25L]),
-    "F" = c(rpois(25L, 1L), NA)
-  )
+  ## Check missing data
+  all_missing_index <- which(vapply(input_df, function(x)
+    sum(is.na(x)) == length(x), TRUE))
 
-  ## Get intro data
-  is_data_table <- is.data.table(df)
-  data_class <- class(df)
-  if (!is.data.table(df))
-    data <- data.table(df)
-
-  getMissingInx <- function(df) {
-    if (!is.data.table(df))
-      df <- data.table(df)
-    vapply(df, function(x)
-      sum(is.na(x)) == length(x), TRUE)
-  }
-
-  ## Find index for each type
-  all_missing_index <- which(getMissingInx(data))
+  ## Find index for numeric columns
   numeric_index <-
-    setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_index)
+    setdiff(which(vapply(input_df, is.numeric, TRUE)), all_missing_index)
 
   ## Count number of numeric and all-missing columns
-  n_all_missing <- length(all_missing_index)
-  n_numeric <- length(numeric_index)
+  num_missing <- length(all_missing_index)
+  num_numeric <- length(numeric_index)
 
   ## Create object for numeric columns
   numeric_obj <- data[, numeric_index, with = FALSE]
   setnames(numeric_obj, make.names(names(numeric_obj)))
-  if (!is_data_table)
-    class(numeric_obj) <- data_class
 
   ## Split data by types
-  split_data <- list(
+  col_list <- list(
     "numeric" = numeric_obj,
-    "num_numeric" = n_numeric,
-    "num_all_missing" = n_all_missing
+    "num_numeric" = num_numeric,
+    "num_missing" = num_missing
   )
 
-  output <- data.table(
-    "rows" = nrow(data),
-    "columns" = ncol(data),
-    "numeric_columns" = split_data[["num_numeric"]],
-    "all_missing_columns" = split_data[["num_all_missing"]],
-    "total_missing_values" = sum(is.na(data)),
-    "complete_rows" = sum(complete.cases(data)),
-    "total_observations" = nrow(data) * ncol(data),
-    "memory_usage" = as.numeric(object.size(data))
+  data_summary <- data.table(
+    "rows" = nrow(input_df),
+    "columns" = ncol(input_df),
+    "numeric_col" = col_list[["num_numeric"]],
+    "missing_col" = col_list[["num_missing"]],
+    "total_num_of_missing_values" = sum(is.na(input_df)),
+    "complete_rows" = sum(complete.cases(input_df)),
+    "total_counts" = nrow(input_df) * ncol(input_df),
+    "memory" = as.numeric(object.size(input_df))
   )
 
-  expect_equal(output[["rows"]], 26L)
-  expect_equal(output[["columns"]], 6L)
-  expect_equal(output[["numeric_columns"]], 2L)
-  expect_equal(output[["all_missing_columns"]], 2L)
-  expect_equal(output[["total_missing_values"]], 54L)
-  expect_equal(output[["total_observations"]], 156L)
-  expect_is(output[["memory_usage"]], "numeric")
+  expect_equal(data_summary[["rows"]], 344L)
+  expect_equal(data_summary[["columns"]], 8L)
+  expect_equal(data_summary[["numeric_col"]], 5L)
+  expect_equal(data_summary[["missing_col"]], 0L)
+  expect_equal(data_summary[["total_num_of_missing_values"]], 19L)
+  expect_equal(data_summary[["total_counts"]], 2752)
+  expect_is(data_summary[["memory"]], "numeric")
 })
 
 test_that("test return object", {
