@@ -1,22 +1,11 @@
-
 #' Plot summary metrics for input data.
-#'
-#' @import ggplot2
-#' @import data.table
-#' @importFrom stats reorder
-#' @importFrom scales comma percent
-#' @importFrom stats complete.cases
-#' @importFrom utils object.size
-#' @import dplyr
-#' @import stringr
-
 #'
 #' @param data input data
 #' @param title plot title
-#' @param theme_config a list of configurations to manually change colors
-#' @return return the ggplot object
-#' @keywords plot_intro
-#' @export
+#' @param color_config configurations to manually change colors
+#'
+#' @return the ggplot object
+#'
 #' @examples
 #' \dontrun{
 #' plot_intro(example_dataframe)
@@ -24,7 +13,7 @@
 plot_intro <-
   function(data,
            title = "",
-           theme_config = list()) {
+           color_config = list()) {
 
     # Check input as a dataframe
     if (!is.data.frame(data)) {
@@ -36,96 +25,76 @@ plot_intro <-
       stop("Plotting title provided is not a string")
     }
 
-    ## Get input data summary
-    is_data_table <- is.data.table(data)
-    data_class <- class(data)
-    if (!is.data.table(data))
-      data <- data.table(data)
+    ## Check missing data
+    all_missing_index <- which(vapply(data, function(x)
+      sum(is.na(x)) == length(x), TRUE))
 
-    getMissingInx <- function(df) {
-      if (!is.data.table(df))
-        df <- data.table(df)
-      vapply(df, function(x)
-        sum(is.na(x)) == length(x), TRUE)
-    }
-
-    ## Find index for each type
-    all_missing_index <- which(getMissingInx(data))
+    ## Find index for numeric columns
     numeric_index <-
       setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_index)
 
     ## Count number of numeric and all-missing columns
-    n_all_missing <- length(all_missing_index)
-    n_numeric <- length(numeric_index)
+    num_missing <- length(all_missing_index)
+    num_numeric <- length(numeric_index)
 
     ## Create object for numeric columns
     numeric_obj <- data[, numeric_index, with = FALSE]
     setnames(numeric_obj, make.names(names(numeric_obj)))
-    if (!is_data_table)
-      class(numeric_obj) <- data_class
 
     ## Split data by types
-    split_data <- list(
+    col_list <- list(
       "numeric" = numeric_obj,
-      "num_numeric" = n_numeric,
-      "num_all_missing" = n_all_missing
+      "num_numeric" = num_numeric,
+      "num_missing" = num_missing
     )
 
     data_summary <- data.table(
       "rows" = nrow(data),
       "columns" = ncol(data),
-      "numeric_columns" = split_data[["num_numeric"]],
-      "all_missing_columns" = split_data[["num_all_missing"]],
-      "total_missing_values" = sum(is.na(data)),
+      "numeric_col" = col_list[["num_numeric"]],
+      "missing_col" = col_list[["num_missing"]],
+      "total_num_of_missing_values" = sum(is.na(data)),
       "complete_rows" = sum(complete.cases(data)),
-      "total_observations" = nrow(data) * ncol(data),
-      "memory_usage" = as.numeric(object.size(data))
+      "total_counts" = nrow(data) * ncol(data),
+      "memory" = as.numeric(object.size(data))
     )
-    if (!is_data_table)
-      class(data_summary) <- data_class
-
-    id <- dimension <- variable <- value <- NULL
 
     ## Get plotting data
-    memory_usage <- data_summary[["memory_usage"]]
-    class(memory_usage) <- "object_size"
-    memory_usage_string <- format(memory_usage, unit = "auto")
     plot_data <- data.table(
       "id" = seq.int(4L),
-      "dimension" = c(rep("column", 2L), "row", "observation"),
-      "variable" = c(
+      "dim" = c(rep("column", 2L), "row", "observation"),
+      "var_name" = c(
         "Numeric Columns",
-        "All Missing Columns",
-        "Complete Rows",
-        "Missing Observations"
+        "Missing Columns",
+        "Missing Values",
+        "Complete Rows"
       ),
-      "value" = c(
-        data_summary[["numeric_columns"]] / data_summary[["columns"]],
-        data_summary[["all_missing_columns"]] / data_summary[["columns"]],
-        data_summary[["complete_rows"]] / data_summary[["rows"]],
-        data_summary[["total_missing_values"]] / data_summary[["total_observations"]]
+      "percent" = c(
+        data_summary[["numeric_col"]] / data_summary[["columns"]],
+        data_summary[["missing_col"]] / data_summary[["columns"]],
+        data_summary[["total_num_of_missing_values"]] / data_summary[["total_counts"]],
+        data_summary[["complete_rows"]] / data_summary[["rows"]]
       )
     )
 
     ## Plot the intro data info
     output <-
       ggplot(plot_data, aes(
-        x = reorder(variable, -id),
-        y = value,
-        fill = dimension
+        x = reorder(var_name, -id),
+        y = percent,
+        fill = dim
       )) +
       geom_bar(stat = "identity") +
       scale_y_continuous(labels = percent) +
-      scale_fill_discrete("Dimension") +
+      scale_fill_discrete("Measurements") +
       coord_flip() +
-      labs(x = "Metrics", y = "Value") +
-      guides(fill = guide_legend(override.aes = aes(label = ""))) +
+      labs(x = "Category", y = "Percent") +
       ggtitle(ifelse(
         str_length(title) == 0,
-        paste("Memory Usage:", memory_usage_string),
+        paste("The percentage VS Category"),
         title
       )) +
-      theme_gray() + scale_color_manual(values = theme_config)
+      theme_gray() + scale_color_manual(values = color_config)
 
     ## Plot object
     class(output) <- c("single", class(output))
