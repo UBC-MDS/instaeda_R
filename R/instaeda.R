@@ -97,8 +97,6 @@ plot_intro <-
       theme_gray() + scale_color_manual(values = color_config)
 
     ## Plot object
-    class(output) <- c("single", class(output))
-
     output
   }
 
