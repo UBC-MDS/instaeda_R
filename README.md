@@ -26,10 +26,9 @@ The main components of this package are:
         data such as the distribution of the numeric columns, 
         factor columns, complete rows and missing observations. 
   - **Data Cleansing**
-      - Custom Imputation of missing values in a data frame using
-        additional techniques, i.e quantiles and randomization by
-        dividing data set into several parts and returns combined
-        imputed data frame.
+      - Custom Imputation of missing values for selected numeric columns in a 
+        data frame using additional techniques, i.e random shuffle rows and use 
+        mean, median or random strategies to return imputed data frame.
   - **Exploratory Visualization**
       - Numerical Correlation Plot: takes in a data frame, selects the
         numerical columns and outputs a correlation plot object. User

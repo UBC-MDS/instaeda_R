@@ -156,26 +156,24 @@ plot_corr <- function(df,
 }
 
 
-#' Takes a dataframe, subsets selected columns and divides into parts for imputation of missing values and returns a data frame.
+#' Takes a dataframe, subsets selected columns and imputes missing values and returns a data frame.
+#' @import tidyr
+#' @import dplyr
+#' @importFrom scales comma percent
 #'
-#' @param dataframe Dataframe from which to take columns and check for missing values.
+#' @param dataframe Dataframe from which to take columns and 
+#' check for missing values.
 #' @param cols List of columns to perform imputation on.
-#' By default, None (perform on all numeric columns).
-#' @param missing_values int, float, str, np.nan or None.
-#' The placeholder for the missing values. All occurences of missing values will be imputed.
-#' @param strategy string. imputation strategy, one of: {'mean', 'median', 'constant', 'most_frequent'}.
-#' By default, 'mean'.
-#' @param fill_value string or numerical value, optional.
-#' When strategy == 'constant', fill_value is used to replace all occurences of missing_values.
-#' If left to default, fill_value will be 0 when filling numerical data and 'missing' for strings or object data types.
+#' By default, NULL(perform on all numeric columns).
+#' @param strategy string. imputation strategy, one of: 
+#' {'mean', 'median', 'random'}. By default, 'mean'.
 #' @param random boolean, optional
 #' When random == True, shuffles data frame before filling. By default, False.
-#' @param parts integer, optional
-#' The number of parts to divide rows of data frame into. By default, 1.
 #' @param verbose integer, optional
 #' Controls the verbosity of the divide and fill. By default, 0.
 #'
-#' @return data.frame Data frame obtained after divide and fill on the corresponding columns.
+#' @return data.frame Data frame obtained after divide and fill on the 
+#' corresponding columns.
 #' @export
 #'
 #' @examples
@@ -183,14 +181,84 @@ plot_corr <- function(df,
 #' divide_and_fill(example_dataframe)
 #' }
 divide_and_fill <- function(dataframe,
-                            cols = None,
-                            missing_values = np.nan,
+                            cols = NULL,
                             strategy = "mean",
-                            fill_value = None,
-                            random = False,
-                            parts = 1,
-                            verbose = 0) {
-  NULL
+                            random = FALSE,
+                            verbose = 0L) {
+  allowed_strategies <- c("mean", "median", "random")
+  
+  if (verbose != 0){
+    print("Checking inputs.")
+  }
+  #Check inputs
+  if (!is.integer(verbose)){
+    stop("Verbose must be an integer.")
+  }
+  if (!is.data.frame(dataframe)) {
+    stop("Dataframe must be a dataframe.")
+  }
+  if (is.null(cols)){
+    cols <-  names(dplyr::select_if(dataframe, is.numeric)) 
+  }
+  if (length(cols) < 1){ 
+    stop("Need at least one numeric columns to fill.")
+  }
+  if (!is.character(cols) | (!all(cols %in% names(dataframe)))){
+    stop("The input cols must be of type character belong to the column
+            names for input dataframe!")
+  }
+  
+  if (!strategy %in% allowed_strategies){
+    stop("Can only use these strategies: mean, median, majority, or random")
+  }
+  if (!is.logical(random)){
+    stop("Random must be logical.")
+  }
+  
+  # Constructing filled dataframe skeleton.
+  if (verbose != 0){
+    print("Constructing filled dataframe skeleton.")
+  }
+  if (random == TRUE){
+    print("Try random shuffle!")
+    rows <- sample(nrow(dataframe))
+    filled_df <- dataframe[rows, ]
+  }else{
+    filled_df <- dataframe
+  }
+  numeric_col_names <- names(dplyr::select_if(dataframe, is.numeric))
+  non_numeric_col_names <- names(dataframe)[!names(dataframe) %in% numeric_col_names]
+  if (all(cols %in% numeric_col_names)){
+    numeric = TRUE
+  }else {
+    stop("All items in list cols must be numeric.")
+  }
+  
+  # Filling dataframe
+  for (j in 1:length(cols)){
+    if(strategy == 'mean'){
+      print(numeric)
+      if (numeric){
+        filled_df[, cols[j]] <- imputeR::guess(filled_df[, cols[j]], type = 'mean')
+      }else{
+        stop('Strategy mean can be used with numeric columns.')
+      }
+    }else if(strategy == 'random'){
+      print(numeric)
+      if (numeric){
+        filled_df[, cols[j]] <- imputeR::guess(filled_df[, cols[j]], type = 'random')
+      }else{
+        stop('Strategy random can be used with numeric columns.')
+      }
+    }else{
+      if (numeric){
+        filled_df[, cols[j]] <- imputeR::guess(filled_df[, cols[j]], type = 'median')
+      }else{
+        stop('Strategy median can be used with numeric columns.')
+      }
+    }
+  }
+  return (filled_df)
 }
 
 
