@@ -1,10 +1,15 @@
-#' Plot summary metrics for input data.
+#' Plot summary introduction for input data.
 #'
 #' @param data input data
 #' @param title plot title
 #' @param color_config configurations to manually change colors
 #'
 #' @return the ggplot object
+#'
+#' @import ggplot2
+#' @import utils
+#' @import dplyr
+#' @import stringr
 #'
 #' @examples
 #' \dontrun{
@@ -14,7 +19,6 @@ plot_intro <-
   function(data,
            title = "",
            color_config = list()) {
-
     # Check input as a dataframe
     if (!is.data.frame(data)) {
       stop("Input provided is not a dataframe")
@@ -25,76 +29,59 @@ plot_intro <-
       stop("Plotting title provided is not a string")
     }
 
-    ## Check missing data
-    all_missing_index <- which(vapply(data, function(x)
-      sum(is.na(x)) == length(x), TRUE))
+    ## Check the number of missing data
+    num_of_missing_data <- sum(is.na(data))
 
-    ## Find index for numeric columns
-    numeric_index <-
-      setdiff(which(vapply(data, is.numeric, TRUE)), all_missing_index)
+    ## Find numeric columns
+    numeric_cols <- unlist(lapply(data, is.numeric))
 
-    ## Count number of numeric and all-missing columns
-    num_missing <- length(all_missing_index)
-    num_numeric <- length(numeric_index)
-
-    ## Create object for numeric columns
-    numeric_obj <- data[, numeric_index, with = FALSE]
-    setnames(numeric_obj, make.names(names(numeric_obj)))
+    ## Count number of numeric columns
+    num_numeric <- ncol(data[, numeric_cols])
 
     ## Split data by types
-    col_list <- list(
-      "numeric" = numeric_obj,
-      "num_numeric" = num_numeric,
-      "num_missing" = num_missing
-    )
+    col_list <- list("num_of_numeric" = num_numeric,
+                     "num_of_missing" = num_of_missing_data)
 
-    data_summary <- data.table(
+    data_summary <- data.frame(
       "rows" = nrow(data),
       "columns" = ncol(data),
-      "numeric_col" = col_list[["num_numeric"]],
-      "missing_col" = col_list[["num_missing"]],
-      "total_num_of_missing_values" = sum(is.na(data)),
+      "numeric_col" = col_list[["num_of_numeric"]],
+      "factor_col" = ncol(data) - num_numeric,
+      "missing_values" = col_list[["num_of_missing"]],
       "complete_rows" = sum(complete.cases(data)),
-      "total_counts" = nrow(data) * ncol(data),
-      "memory" = as.numeric(object.size(data))
+      "total_counts" = nrow(data) * ncol(data)
     )
 
-    ## Get plotting data
-    plot_data <- data.table(
-      "id" = seq.int(4L),
-      "dim" = c(rep("column", 2L), "row", "observation"),
+    ## Calculate the components for plotting
+    plot_data <- data.frame(
+      "type" = c("column", "column", "observation", "rows"),
       "var_name" = c(
         "Numeric Columns",
-        "Missing Columns",
+        "Factor Columns",
         "Missing Values",
         "Complete Rows"
       ),
-      "percent" = c(
-        data_summary[["numeric_col"]] / data_summary[["columns"]],
-        data_summary[["missing_col"]] / data_summary[["columns"]],
-        data_summary[["total_num_of_missing_values"]] / data_summary[["total_counts"]],
-        data_summary[["complete_rows"]] / data_summary[["rows"]]
-      )
+      "count" = c(data_summary[["numeric_col"]],
+                  data_summary[["factor_col"]],
+                  data_summary[["missing_values"]],
+                  data_summary[["complete_rows"]])
+
     )
 
     ## Plot the intro data info
-    output <-
-      ggplot(plot_data, aes(
-        x = reorder(var_name, -id),
-        y = percent,
-        fill = dim
-      )) +
+    output <- ggplot(plot_data, aes(x = var_name,
+                                    y = count,
+                                    fill = type)) +
       geom_bar(stat = "identity") +
-      scale_y_continuous(labels = percent) +
       scale_fill_discrete("Measurements") +
-      coord_flip() +
-      labs(x = "Category", y = "Percent") +
-      ggtitle(ifelse(
-        str_length(title) == 0,
-        paste("The percentage VS Category"),
-        title
-      )) +
-      theme_gray() + scale_color_manual(values = color_config)
+      labs(x = "Category", y = "Count") +
+      ggtitle(ifelse(str_length(title) == 0,
+                     paste("Summary for input data"),
+                     title)) +
+      theme_gray() +
+      scale_color_manual(values = color_config) +
+      facet_wrap( ~ type) +
+      theme(axis.text.x = element_text(angle = 90))
 
     ## Plot object
     output
