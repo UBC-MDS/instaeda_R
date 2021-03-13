@@ -35,4 +35,5 @@ Imports:
     palmerpenguins,
     stringr,
     ggthemes,
-    utils
+    utils,
+    covr
