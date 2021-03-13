@@ -202,6 +202,12 @@ divide_and_fill <- function(dataframe,
 #' @param ggtheme customize the ggtheme used in plots. Only the following ggthemes are supported: theme_gdocs, theme_excel, theme_economist, theme_wsj, theme_solarized
 #'
 #' @return named list of ggplot objects with each name referencing a column name
+#'
+#' @import ggthemes
+#' @import tidyverse
+#' @import dplyr
+#' @import stringr
+#'
 #' @export
 #'
 #' @examples
