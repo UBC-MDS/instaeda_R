@@ -17,47 +17,55 @@ test_that("test plotting title as a string", {
 })
 
 test_that("test intro output", {
-  ## Check missing data
-  all_missing_index <- which(vapply(input_df, function(x)
-    sum(is.na(x)) == length(x), TRUE))
+  ## Check the number of missing data
+  num_of_missing_data <- sum(is.na(input_df))
 
-  ## Find index for numeric columns
-  numeric_index <-
-    setdiff(which(vapply(input_df, is.numeric, TRUE)), all_missing_index)
+  ## Find numeric columns
+  numeric_cols <- unlist(lapply(input_df, is.numeric))
 
-  ## Count number of numeric and all-missing columns
-  num_missing <- length(all_missing_index)
-  num_numeric <- length(numeric_index)
-
-  ## Create object for numeric columns
-  numeric_obj <- input_df[, numeric_index, with = FALSE]
-  setnames(numeric_obj, make.names(names(numeric_obj)))
+  ## Count number of numeric columns
+  num_numeric <- ncol(input_df[, numeric_cols])
 
   ## Split data by types
-  col_list <- list(
-    "numeric" = numeric_obj,
-    "num_numeric" = num_numeric,
-    "num_missing" = num_missing
-  )
+  col_list <- list("num_of_numeric" = num_numeric,
+                   "num_of_missing" = num_of_missing_data)
 
-  data_summary <- data.table(
+  data_summary <- data.frame(
     "rows" = nrow(input_df),
     "columns" = ncol(input_df),
-    "numeric_col" = col_list[["num_numeric"]],
-    "missing_col" = col_list[["num_missing"]],
-    "total_num_of_missing_values" = sum(is.na(input_df)),
+    "numeric_col" = col_list[["num_of_numeric"]],
+    "factor_col" = ncol(input_df) - num_numeric,
+    "missing_values" = col_list[["num_of_missing"]],
     "complete_rows" = sum(complete.cases(input_df)),
-    "total_counts" = nrow(input_df) * ncol(input_df),
-    "memory" = as.numeric(object.size(input_df))
+    "total_counts" = nrow(input_df) * ncol(input_df)
+  )
+
+  plot_data <- data.frame(
+    "type" = c("column", "column", "observation", "rows"),
+    "var_name" = c(
+      "Numeric Columns",
+      "Factor Columns",
+      "Missing Values",
+      "Complete Rows"
+    ),
+    "count" = c(data_summary[["numeric_col"]],
+                data_summary[["factor_col"]],
+                data_summary[["missing_values"]],
+                data_summary[["complete_rows"]])
+
   )
 
   expect_equal(data_summary[["rows"]], 344L)
   expect_equal(data_summary[["columns"]], 8L)
   expect_equal(data_summary[["numeric_col"]], 5L)
-  expect_equal(data_summary[["missing_col"]], 0L)
-  expect_equal(data_summary[["total_num_of_missing_values"]], 19L)
+  expect_equal(data_summary[["factor_col"]], 3L)
+  expect_equal(data_summary[["missing_values"]], 19L)
   expect_equal(data_summary[["total_counts"]], 2752)
-  expect_is(data_summary[["memory"]], "numeric")
+  expect_equal(plot_data[1, 3], 5)
+  expect_equal(plot_data[2, 3], 3)
+  expect_equal(plot_data[3, 3], 19)
+  expect_equal(plot_data[4, 3], 333)
+
 })
 
 test_that("test return object", {
