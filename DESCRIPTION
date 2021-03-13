@@ -33,7 +33,6 @@ Imports:
     dplyr,
     testthat,
     palmerpenguins,
-    data.table,
-    scales,
     stringr,
-    ggthemes
+    ggthemes,
+    utils
