@@ -19,13 +19,12 @@ cleansing and plotting with a minimal amount of code.
 The main components of this package are:
 
   - **Data Checking**
-      - Plot basic information for input data: Take the input data and
-        declare the title of the plot and a list of configurations to be
-        passed to themes to invisibly return the Altair object with
-        summary metrics including the memory usage, the basic
-        description of the input data such as the distribution of the
-        discrete columns, continuous columns, all missing columns,
-        complete rows and missing observations.
+      - Plot basic information for input data: Take the input data 
+        and declare the title of the plot and a list of configurations 
+        to be passed to themes to invisibly return the ggplot object 
+        with summary metrics including the basic description of the input
+        data such as the distribution of the numeric columns, 
+        factor columns, complete rows and missing observations. 
   - **Data Cleansing**
       - Custom Imputation of missing values in a data frame using
         additional techniques, i.e quantiles and randomization by
@@ -70,7 +69,7 @@ package:
 ``` r
 #library(instaeda)
 
-#plot_intro(example_dataframe)
+#plot_info(example_dataframe)
 #plot_corr(example_dataframe)
 #plot_basic_distributions(example_dataframe)
 #divide_and_fill(example_dataframe)
