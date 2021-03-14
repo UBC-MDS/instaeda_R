@@ -159,6 +159,7 @@ plot_corr <- function(df,
 #' Takes a dataframe, subsets selected columns and imputes missing values and returns a data frame.
 #' @import tidyr
 #' @import dplyr
+#' @import imputeR
 #' @importFrom scales comma percent
 #'
 #' @param dataframe Dataframe from which to take columns and 
