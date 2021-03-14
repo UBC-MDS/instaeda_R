@@ -36,4 +36,8 @@ Imports:
     stringr,
     ggthemes,
     utils,
-    covr
+    covr,
+    imputeR,
+    scales,
+    tidyr
+    
