@@ -44,8 +44,8 @@ The main components of this package are:
 There are a myriad of packages that provide similar functionality in the
 R ecosystem. A few of the packages include:
 
-  - [dlookr](https://cran.r-project.org/web/packages/dlookr/)
-  - [SmartEDA](https://cran.r-project.org/web/packages/SmartEDA/)
+  - [dlookr](https://CRAN.R-project.org/package=dlookr)
+  - [SmartEDA](https://CRAN.R-project.org/package=SmartEDA)
 
 ## Installation
 

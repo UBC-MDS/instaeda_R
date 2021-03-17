@@ -1,5 +1,5 @@
 Package: instaeda
-Title: InstaEDA: Quick and easy way to clean data and build exploratory data analysis plots
+Title: InstaEDA: Quick and Easy Way to Clean Data and Build Exploratory Data Analysis Plots
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Justin",
