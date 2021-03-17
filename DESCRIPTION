@@ -39,6 +39,7 @@ Imports:
     covr,
     imputeR,
     scales,
-    tidyr
+    tidyr,
+    tidyselect
 URL: https://github.com/UBC-MDS/instaeda_R
 BugReports: https://github.com/UBC-MDS/instaeda_R/issues

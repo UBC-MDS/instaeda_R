@@ -1,3 +1,6 @@
+
+
+
 #' Plot summary introduction for input data.
 #'
 #' @param data input data
@@ -10,6 +13,7 @@
 #' @import utils
 #' @import dplyr
 #' @import stringr
+#' @importFrom stats, complete.cases
 #'
 #' @examples
 #' \dontrun{
@@ -69,6 +73,7 @@ plot_info <-
     )
 
     ## Plot the intro data info
+    var_name <- type <- NULL # initialize local variables
     output <- ggplot(plot_data, aes(x = var_name,
                                     y = count,
                                     fill = type)) +
@@ -97,7 +102,11 @@ plot_info <-
 #' @param colour_palette one of ggplot accepted colour schemes
 #'
 #' @return ggplot plot object
-#'
+#' @import ggplot2
+#' @importFrom stats cor
+#' @import dplyr
+#' @import tidyr
+#' @importFrom tidyselect vars_select_helpers
 #' @examples
 #' \dontrun{
 #' plot_corr(example_dataframe)
@@ -124,13 +133,14 @@ plot_corr <- function(df,
   if (!(method %in% correlation_methods)) {
     stop("Correlation method not acceptable")
   }
-  corr_df <- as.data.frame(cor(num_df, use = "complete.obs", method = method))
+  corr_df <- as.data.frame(stats::cor(num_df, use = "complete.obs", method = method))
 
   corr_df <- corr_df %>%
     dplyr::mutate("variable_1" = (corr_df %>% rownames())) %>%
-    tidyr::pivot_longer(names_to = "variable_2", values_to = "corr", cols = where(is.numeric))
+    tidyr::pivot_longer(names_to = "variable_2", values_to = "corr", cols = tidyselect::vars_select_helpers$where(is.numeric))
 
   # plot
+  variable_1 <- variable_2 <- corr <- NULL #initialize local variables
   colour_palette_list <- c(
     "BrBG", "PiYG", "PRGn", "PuOr", "RdBu",
     "RdGy", "RdYlBu", "RdYlGn", "Spectral"
@@ -162,18 +172,18 @@ plot_corr <- function(df,
 #' @import imputeR
 #' @importFrom scales comma percent
 #'
-#' @param dataframe Dataframe from which to take columns and 
+#' @param dataframe Dataframe from which to take columns and
 #' check for missing values.
 #' @param cols List of columns to perform imputation on.
 #' By default, NULL(perform on all numeric columns).
-#' @param strategy string. imputation strategy, one of: 
+#' @param strategy string. imputation strategy, one of:
 #' {'mean', 'median', 'random'}. By default, 'mean'.
 #' @param random boolean, optional
 #' When random == True, shuffles data frame before filling. By default, False.
 #' @param verbose integer, optional
 #' Controls the verbosity of the divide and fill. By default, 0.
 #'
-#' @return data.frame Data frame obtained after divide and fill on the 
+#' @return data.frame Data frame obtained after divide and fill on the
 #' corresponding columns.
 #' @export
 #'
@@ -187,7 +197,7 @@ divide_and_fill <- function(dataframe,
                             random = FALSE,
                             verbose = 0L) {
   allowed_strategies <- c("mean", "median", "random")
-  
+
   if (verbose != 0){
     print("Checking inputs.")
   }
@@ -199,23 +209,23 @@ divide_and_fill <- function(dataframe,
     stop("Dataframe must be a dataframe.")
   }
   if (is.null(cols)){
-    cols <-  names(dplyr::select_if(dataframe, is.numeric)) 
+    cols <-  names(dplyr::select_if(dataframe, is.numeric))
   }
-  if (length(cols) < 1){ 
+  if (length(cols) < 1){
     stop("Need at least one numeric columns to fill.")
   }
   if (!is.character(cols) | (!all(cols %in% names(dataframe)))){
     stop("The input cols must be of type character belong to the column
             names for input dataframe!")
   }
-  
+
   if (!strategy %in% allowed_strategies){
     stop("Can only use these strategies: mean, median, majority, or random")
   }
   if (!is.logical(random)){
     stop("Random must be logical.")
   }
-  
+
   # Constructing filled dataframe skeleton.
   if (verbose != 0){
     print("Constructing filled dataframe skeleton.")
@@ -234,7 +244,7 @@ divide_and_fill <- function(dataframe,
   }else {
     stop("All items in list cols must be numeric.")
   }
-  
+
   # Filling dataframe
   for (j in 1:length(cols)){
     if(strategy == 'mean'){
