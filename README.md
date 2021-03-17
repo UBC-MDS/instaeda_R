@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/UBC-MDS/instaeda_R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/instaeda_R/actions)
+[![codecov](https://codecov.io/gh/UBC-MDS/instaeda_R/branch/main/graph/badge.svg?token=NFE0J10DH6)](https://codecov.io/gh/UBC-MDS/instaeda_R)
 <!-- badges: end -->
 
 Quick and easy way to clean data and build exploratory data analysis
