@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # instaeda
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UBC-MDS/instaeda_R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/instaeda_R/actions)
 <!-- badges: end -->
 
 Quick and easy way to clean data and build exploratory data analysis plots.
