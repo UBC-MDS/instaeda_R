@@ -13,7 +13,7 @@
 #' @import utils
 #' @import dplyr
 #' @import stringr
-#' @importFrom stats, complete.cases
+#' @importFrom stats complete.cases
 #'
 #' @examples
 #' \dontrun{
@@ -52,7 +52,7 @@ plot_info <-
       "numeric_col" = col_list[["num_of_numeric"]],
       "factor_col" = ncol(data) - num_numeric,
       "missing_values" = col_list[["num_of_missing"]],
-      "complete_rows" = sum(complete.cases(data)),
+      "complete_rows" = sum(stats::complete.cases(data)),
       "total_counts" = nrow(data) * ncol(data)
     )
 
@@ -283,7 +283,6 @@ divide_and_fill <- function(dataframe,
 #' @return named list of ggplot objects with each name referencing a column name
 #'
 #' @import ggthemes
-#' @import tidyverse
 #' @import dplyr
 #' @import stringr
 #'

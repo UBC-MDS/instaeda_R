@@ -29,8 +29,6 @@ Imports:
     ggplot2,
     dplyr,
     magrittr,
-    tidyverse,
-    dplyr,
     testthat,
     palmerpenguins,
     stringr,
@@ -40,6 +38,8 @@ Imports:
     imputeR,
     scales,
     tidyr,
-    tidyselect
+    tidyselect,
+    stats,
+    rlang
 URL: https://github.com/UBC-MDS/instaeda_R
 BugReports: https://github.com/UBC-MDS/instaeda_R/issues
