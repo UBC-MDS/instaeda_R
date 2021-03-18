@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 # instaeda
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UBC-MDS/instaeda_R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/instaeda_R/actions)
+[![codecov](https://codecov.io/gh/UBC-MDS/instaeda_R/branch/main/graph/badge.svg?token=NFE0J10DH6)](https://codecov.io/gh/UBC-MDS/instaeda_R)
 <!-- badges: end -->
 
 Quick and easy way to clean data and build exploratory data analysis plots.
@@ -37,8 +39,8 @@ The main components of this package are:
 There are a myriad of packages that provide similar functionality in the
 R ecosystem. A few of the packages include:
 
-  - [dlookr](https://cran.r-project.org/web/packages/dlookr/)
-  - [SmartEDA](https://cran.r-project.org/web/packages/SmartEDA/)
+  - [dlookr](https://CRAN.R-project.org/package=dlookr)
+  - [SmartEDA](https://CRAN.R-project.org/package=SmartEDA)
   
 
 ## Installation
