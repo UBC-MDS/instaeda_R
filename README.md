@@ -61,7 +61,7 @@ devtools::install_github("UBC-MDS/instaeda_R")
 
 The package vingette or long form documentation is available in the link below:
     
-    https://jufu.github.io/instaeda/
+[https://jufu.github.io/instaeda/](https://jufu.github.io/instaeda/)
 
 
 ## Example
