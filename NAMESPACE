@@ -3,6 +3,8 @@
 export("%>%")
 export(divide_and_fill)
 export(plot_basic_distributions)
+export(plot_corr)
+export(plot_info)
 import(dplyr)
 import(ggplot2)
 import(ggthemes)

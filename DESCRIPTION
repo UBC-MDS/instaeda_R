@@ -43,3 +43,7 @@ Imports:
     rlang
 URL: https://github.com/UBC-MDS/instaeda_R
 BugReports: https://github.com/UBC-MDS/instaeda_R/issues
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

@@ -2,7 +2,7 @@
 % Please edit documentation in R/instaeda.R
 \name{plot_corr}
 \alias{plot_corr}
-\title{Plot correlation between numeric features.
+\title{Plot correlation plots between numeric features.
 Takes a dataframe, subsets numeric columns and returns a correlation plot object.}
 \usage{
 plot_corr(df, cols = NULL, method = "pearson", colour_palette = "PuOr")
@@ -20,7 +20,7 @@ plot_corr(df, cols = NULL, method = "pearson", colour_palette = "PuOr")
 ggplot plot object
 }
 \description{
-Plot correlation between numeric features.
+Plot correlation plots between numeric features.
 Takes a dataframe, subsets numeric columns and returns a correlation plot object.
 }
 \examples{

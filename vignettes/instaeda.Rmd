@@ -1,0 +1,94 @@
+---
+title: "instaeda"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{instaeda}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+Quick and easy way to clean data and build exploratory data analysis plots.
+
+This idea came up as we have been building data projects for quite some time now in the UBC MDS program. We noticed that there are some repetitive activities that occur when we first explore the data. This project will help you take a given raw data set an conduct some data cleansing and plotting with a minimal amount of code.
+
+The main components of this package are:
+
+-   Data Checking
+-   Data Cleansing
+-   Exploratory Visualization
+
+To get started with instaeda, we load the library and some sample data (palmerpenguins) to showcase this package with:
+
+```{r setup}
+
+library(instaeda)
+library(palmerpenguins)
+```
+
+Let's try each function by the main components of this package.
+
+First we will use the penguins data set as an example data frame to be used in the examples.
+
+```{r sample_data}
+input_df <- palmerpenguins::penguins
+head(input_df)
+```
+
+**Data Checking**
+
+With the function *plot_info*() you can generate a plot with a basic summary metrics of the data such as the distribution of numeric columns, factor columns , complete rows and missing observations.
+
+```{r plot_info}
+plot_info(input_df)
+
+```
+
+**Data Cleansing**
+
+With the function *divide_and_fill(), you can impute missing values in numerical columns. You can fill the the missing values with:*
+
+-   mean
+
+-   median
+
+-   random
+
+In addition, you can also shuffle the data frame.
+
+```{r divide_and_fill}
+divide_and_fill(input_df, strategy='median', random=TRUE)
+
+```
+
+**Exploratory Visualization**
+
+With the function *plot_corr(), you can generate a correlation plot on numerical columns with one of the following correlation methods:*
+
+-   pearson
+
+-   kendall
+
+-   spearman
+
+```{r plot_corr}
+
+plot_corr(input_df, method='pearson')
+```
+
+With the function *plot_basic_distributions(), you can generate basic distribution plots for factor, character and/or numeric columns and access each plot in a named list.*
+
+```{r plot_basic_distributions}
+
+plot_basic_distributions(input_df)
+
+```
+
+We hope this package will help you with your initial exploratory analysis in your projects.

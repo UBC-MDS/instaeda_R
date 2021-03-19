@@ -2,14 +2,14 @@
 % Please edit documentation in R/instaeda.R
 \name{plot_info}
 \alias{plot_info}
-\title{Plot summary introduction for input data.}
+\title{Plot summary metrics for a data frame}
 \usage{
 plot_info(data, title = "", color_config = list())
 }
 \arguments{
-\item{data}{input data}
+\item{data}{input data frame}
 
-\item{title}{plot title}
+\item{title}{title of plot}
 
 \item{color_config}{configurations to manually change colors}
 }
@@ -17,7 +17,7 @@ plot_info(data, title = "", color_config = list())
 the ggplot object
 }
 \description{
-Plot summary introduction for input data.
+Plot summary metrics for a data frame
 }
 \examples{
 \dontrun{

@@ -1,10 +1,9 @@
 
 
-
-#' Plot summary introduction for input data.
+#' Plot summary metrics for a data frame
 #'
-#' @param data input data
-#' @param title plot title
+#' @param data input data frame
+#' @param title title of plot
 #' @param color_config configurations to manually change colors
 #'
 #' @return the ggplot object
@@ -14,7 +13,7 @@
 #' @import dplyr
 #' @import stringr
 #' @importFrom stats complete.cases
-#'
+#' @export
 #' @examples
 #' \dontrun{
 #' plot_info(example_dataframe)
@@ -93,7 +92,7 @@ plot_info <-
   }
 
 
-#' Plot correlation between numeric features.
+#' Plot correlation plots between numeric features.
 #' Takes a dataframe, subsets numeric columns and returns a correlation plot object.
 #'
 #' @param df Dataframe from which to take columns and calculate, plot correlation between columns.
@@ -107,6 +106,7 @@ plot_info <-
 #' @import dplyr
 #' @import tidyr
 #' @importFrom tidyselect vars_select_helpers
+#' @export
 #' @examples
 #' \dontrun{
 #' plot_corr(example_dataframe)
