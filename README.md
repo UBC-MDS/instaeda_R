@@ -7,6 +7,7 @@
 
 [![R-CMD-check](https://github.com/UBC-MDS/instaeda_R/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/instaeda_R/actions)
 [![codecov](https://codecov.io/gh/UBC-MDS/instaeda_R/branch/main/graph/badge.svg?token=NFE0J10DH6)](https://codecov.io/gh/UBC-MDS/instaeda_R)
+
 <!-- badges: end -->
 
 Quick and easy way to clean data and build exploratory data analysis
@@ -20,43 +21,36 @@ cleansing and plotting with a minimal amount of code.
 
 The main components of this package are:
 
-  - **Data Checking**
-      - Plot basic information for input data: Take the input data and
-        declare the title of the plot and a list of configurations to be
-        passed to themes to invisibly return the ggplot object with
-        summary metrics including the basic description of the input
-        data such as the distribution of the numeric columns, factor
-        columns, complete rows and missing observations.
-  - **Data Cleansing**
-      - Custom Imputation of missing values in a data frame using
-        additional techniques, i.e quantiles and randomization by
-        dividing data set into several parts and returns combined
-        imputed data frame.
-  - **Exploratory Visualization**
-      - Numerical Correlation Plot: takes in a data frame, selects the
-        numerical columns and outputs a correlation plot object. User
-        can optionally pass in subset of columns to define which columns
-        to compare.
-      - Plot Basic Distribution Plot by datatype: Pass in data frame and
-        based on parameters, will return histograms, bar charts, or
-        other chart types depending on the column’s datatype.
+-   **Data Checking**
+
+    -   Plot basic summary information for a given data frame. An output
+        ggplot will be returned with summary metrics including the basic
+        description of the input data such as the distribution of the
+        numeric columns, factor columns, complete rows and missing
+        observations.
+
+-   **Data Cleansing**
+
+    -   Update missing values in a data frame. This function uses custom
+        Imputation of missing values using mean, median and random. In
+        addition, you can shuffle the data using a parameter.
+
+-   **Exploratory Visualization**
+
+    -   Generate a numerical correlation plot using your preferred
+        correlation method.
+    -   Generate basic distribution plots by column type.
 
 There are a myriad of packages that provide similar functionality in the
 R ecosystem. A few of the packages include:
 
-  - [dlookr](https://CRAN.R-project.org/package=dlookr)
-  - [SmartEDA](https://CRAN.R-project.org/package=SmartEDA)
+-   [dlookr](https://CRAN.R-project.org/package=dlookr)
+-   [SmartEDA](https://CRAN.R-project.org/package=SmartEDA)
 
 ## Installation
 
-You can install the released version of instaeda from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("instaeda")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -66,7 +60,7 @@ devtools::install_github("UBC-MDS/instaeda_R")
 ## Example
 
 This is a basic example of usage for functions found inside the instaeda
-package:
+package.
 
 ``` r
 #library(instaeda)
