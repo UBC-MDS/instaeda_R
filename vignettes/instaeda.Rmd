@@ -6,10 +6,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r, include=FALSE}
-devtools::load_all(".")
-library(devtools)
-```
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
