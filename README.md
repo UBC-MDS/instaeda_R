@@ -57,16 +57,23 @@ You can install the development version from
 devtools::install_github("UBC-MDS/instaeda_R")
 ```
 
+## Documentation
+
+The package vingette or long form documentation is available in the link below:
+    
+    https://jufu.github.io/instaeda/
+
+
 ## Example
 
 This is a basic example of usage for functions found inside the instaeda
 package.
 
 ``` r
-#library(instaeda)
+library(instaeda)
 
-#plot_info(example_dataframe)
-#plot_corr(example_dataframe)
-#plot_basic_distributions(example_dataframe)
-#divide_and_fill(example_dataframe)
+plot_info(example_dataframe)
+plot_corr(example_dataframe)
+plot_basic_distributions(example_dataframe)
+divide_and_fill(example_dataframe)
 ```
