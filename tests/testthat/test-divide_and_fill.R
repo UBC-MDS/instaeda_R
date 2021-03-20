@@ -22,6 +22,10 @@ test_that("test cols", {
 })
 
 test_that("test cols", {
+  expect_error(divide_and_fill(input_df, cols=list()), "Need at least one numeric columns to fill.")
+})
+
+test_that("test cols", {
   expect_error(divide_and_fill(input_df, cols=NA), "The input cols must be of type character belong to the column
             names for input dataframe!")
 })
@@ -45,6 +49,11 @@ test_that("test return object dataframe", {
 })
 
 test_that("test return object dataframe", {
+  filled_df <- divide_and_fill(input_df, verbose = 1L)
+  expect_true(is.data.frame(filled_df))
+})
+
+test_that("test return object dataframe", {
   filled_df <- divide_and_fill(input_df, cols = c("bill_length_mm", "body_mass_g"))
   expect_true(is.data.frame(filled_df))
 })
@@ -61,5 +70,20 @@ test_that("test return object dataframe", {
 
 test_that("test return object dataframe", {
   filled_df <- divide_and_fill(input_df, cols = "bill_length_mm", verbose = 0L)
+  expect_true(is.data.frame(filled_df))
+})
+
+test_that("test return object dataframe", {
+  filled_df <- divide_and_fill(input_df, verbose = 1L, random = TRUE)
+  expect_true(is.data.frame(filled_df))
+})
+
+test_that("test return object dataframe", {
+  filled_df <- divide_and_fill(input_df, verbose = 1L, strategy = 'random')
+  expect_true(is.data.frame(filled_df))
+})
+
+test_that("test return object dataframe", {
+  filled_df <- divide_and_fill(input_df, verbose = 1L, strategy = 'median')
   expect_true(is.data.frame(filled_df))
 })
